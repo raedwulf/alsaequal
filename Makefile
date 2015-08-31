@@ -45,8 +45,8 @@ clean:
 
 install: all
 	@echo Installing...
-	$(Q)install -m 644 $(SND_PCM_BIN) ${DESTDIR}/usr/lib/alsa-lib/
-	$(Q)install -m 644 $(SND_CTL_BIN) ${DESTDIR}/usr/lib/alsa-lib/
+	$(Q)install -m 755 $(SND_PCM_BIN) ${DESTDIR}/usr/lib/alsa-lib/
+	$(Q)install -m 755 $(SND_CTL_BIN) ${DESTDIR}/usr/lib/alsa-lib/
 
 uninstall:
 	@echo Un-installing...
