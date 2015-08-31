@@ -1,0 +1,3 @@
+ctl_equal.o: ctl_equal.c ladspa.h ladspa_utils.h
+ladspa_utils.o: ladspa_utils.c ladspa.h ladspa_utils.h
+pcm_equal.o: pcm_equal.c ladspa.h ladspa_utils.h
