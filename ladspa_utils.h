@@ -46,10 +46,10 @@ typedef struct LADSPA_Control_Data_ {
 	int type;
 } LADSPA_Control_Data;
 typedef struct LADSPA_Control_ {
-	unsigned long length;
-	unsigned long id;
-	unsigned long channels;
-	unsigned long num_controls;
+	unsigned long long length;
+	unsigned long long id;
+	unsigned long long channels;
+	unsigned long long num_controls;
 	int input_index;
 	int output_index;
 	LADSPA_Control_Data control[];
