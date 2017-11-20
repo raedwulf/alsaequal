@@ -150,7 +150,7 @@ SND_PCM_PLUGIN_DEFINE_FUNC(equal)
 	snd_pcm_equal_t *equal;
 	snd_config_t *sconf = NULL;
 	const char *controls = ".alsaequal.bin";
-	const char *library = "/usr/lib/ladspa/caps.so";
+	const char *library = "caps.so";
 	const char *module = "Eq10";
 	long channels = 2;
 	int err;
