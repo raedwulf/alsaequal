@@ -7,6 +7,7 @@
 #define LADSPA_SDK_LOAD_PLUGIN_LIB
 
 #include "ladspa.h"
+#include <stdint.h>
 
 /* This function call takes a plugin library filename, searches for
    the library along the LADSPA_PATH, loads it with dlopen() and
@@ -40,18 +41,18 @@ int LADSPADefault(const LADSPA_PortRangeHint * psPortRangeHint,
 #define LADSPA_CNTRL_INPUT	0
 #define LADSPA_CNTRL_OUTPUT	1
 typedef struct LADSPA_Control_Data_ {
-	int index;
+	int32_t index;
 	LADSPA_Data data[16];	/* Max number of channels, would be nicer if 
 								this wasn't a fixed number */
-	int type;
+	int32_t type;
 } LADSPA_Control_Data;
 typedef struct LADSPA_Control_ {
-	unsigned long length;
-	unsigned long id;
-	unsigned long channels;
-	unsigned long num_controls;
-	int input_index;
-	int output_index;
+	uint32_t length;
+	uint32_t id;
+	uint32_t channels;
+	uint32_t num_controls;
+	int32_t input_index;
+	int32_t output_index;
 	LADSPA_Control_Data control[];
 } LADSPA_Control;
 LADSPA_Control * LADSPAcontrolMMAP(const LADSPA_Descriptor *psDescriptor,
