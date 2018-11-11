@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <inttypes.h>
 #include <fcntl.h>
 #include <dlfcn.h>
 #include <errno.h>
@@ -403,7 +404,7 @@ LADSPA_Control * LADSPAcontrolMMAP(const LADSPA_Descriptor *psDescriptor,
 	}
 
 	if(ptr->id != psDescriptor->UniqueID) {
-		fprintf(stderr, "%s is not a control file for ladspa id %ld.\n",
+		fprintf(stderr, "%s is not a control file for ladspa id %" PRId32 ".\n",
 				filename, ptr->id);
 		LADSPAcontrolUnMMAP(ptr);
 		free(filename);
