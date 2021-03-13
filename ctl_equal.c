@@ -134,7 +134,7 @@ static int equal_write_integer(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
 	for(i = 0; i < equal->control_data->channels; i++) {
 		setting = value[i];
 
-		if(!equal->control_info[key].isLog) {
+		if(equal->control_info[key].isLog) {
       		float min = equal->control_info[key].min;
       		float max = equal->control_info[key].max;
       		float logarithmicallyScaledValue = min * pow(max/min, (setting/100));
