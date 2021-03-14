@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <alsa/asoundlib.h>
 #include <alsa/control_external.h>
+#include <math.h>
 
 #include "ladspa.h"
 #include "ladspa_utils.h"
@@ -28,6 +29,7 @@ typedef struct snd_ctl_equal_control {
 	long min;
 	long max;
 	char *name;
+	_Bool isLog;
 } snd_ctl_equal_control_t;
 
 typedef struct snd_ctl_equal {
@@ -113,10 +115,18 @@ static int equal_read_integer(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
 	int i;
 
 	for(i = 0; i < equal->control_data->channels; i++) {
-		value[i] = ((equal->control_data->control[key].data[i] -
-			equal->control_info[key].min)/
-			(equal->control_info[key].max-
-			equal->control_info[key].min))*100;
+		if(equal->control_info[key].isLog) {
+			float logValue = equal->control_data->control[key].data[i];
+			float min = equal->control_info[key].min;
+			float max = equal->control_info[key].max;
+			float linearlyScaledValue = log(logValue/min) / log(max/min);
+			value[i] = roundf(linearlyScaledValue * 100);
+		} else {
+			value[i] = ((equal->control_data->control[key].data[i] -
+				equal->control_info[key].min)/
+				(equal->control_info[key].max-
+				equal->control_info[key].min))*100;
+		}
 	}
 
 	return equal->control_data->channels*sizeof(long);
@@ -131,10 +141,18 @@ static int equal_write_integer(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
 
 	for(i = 0; i < equal->control_data->channels; i++) {
 		setting = value[i];
-		equal->control_data->control[key].data[i] = (setting/100)*
-			(equal->control_info[key].max-
-			equal->control_info[key].min)+
-			equal->control_info[key].min;
+
+		if(equal->control_info[key].isLog) {
+      		float min = equal->control_info[key].min;
+      		float max = equal->control_info[key].max;
+      		float logarithmicallyScaledValue = min * pow(max/min, (setting/100));
+      		equal->control_data->control[key].data[i] = logarithmicallyScaledValue;
+		} else {
+			equal->control_data->control[key].data[i] = (setting/100)*
+				(equal->control_info[key].max-
+				equal->control_info[key].min)+
+				equal->control_info[key].min;
+		}
 	}
 
 	return 1;
@@ -280,6 +298,8 @@ SND_CTL_PLUGIN_DEFINE_FUNC(equal)
 			}
 			sprintf(equal->control_info[i].name, "%02d. %s%s",
 					index, equal->klass->PortNames[index], sufix);
+      
+			equal->control_info[i].isLog = LADSPA_IS_HINT_LOGARITHMIC(equal->klass->PortRangeHints[index].HintDescriptor);
 		}
 	}
 
