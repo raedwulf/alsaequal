@@ -115,10 +115,18 @@ static int equal_read_integer(snd_ctl_ext_t *ext, snd_ctl_ext_key_t key,
 	int i;
 
 	for(i = 0; i < equal->control_data->channels; i++) {
-		value[i] = ((equal->control_data->control[key].data[i] -
-			equal->control_info[key].min)/
-			(equal->control_info[key].max-
-			equal->control_info[key].min))*100;
+		if(equal->control_info[key].isLog) {
+			float logValue = equal->control_data->control[key].data[i];
+			float min = equal->control_info[key].min;
+			float max = equal->control_info[key].max;
+			float linearlyScaledValue = log(logValue/min) / log(max/min);
+			value[i] = roundf(linearlyScaledValue * 100);
+		} else {
+			value[i] = ((equal->control_data->control[key].data[i] -
+				equal->control_info[key].min)/
+				(equal->control_info[key].max-
+				equal->control_info[key].min))*100;
+		}
 	}
 
 	return equal->control_data->channels*sizeof(long);
