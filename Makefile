@@ -7,7 +7,7 @@ Q	?= @
 CC 	:= gcc
 CFLAGS := -I. -O2 -Wall -funroll-loops -ffast-math -fPIC -DPIC
 LD := gcc
-LDFLAGS := -O2 -Wall -shared -lasound
+LDFLAGS := -O2 -shared -lasound
 
 SND_PCM_OBJECTS = pcm_equal.o ladspa_utils.o
 SND_PCM_LIBS =
